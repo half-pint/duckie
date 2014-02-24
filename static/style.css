@@ -1,0 +1,64 @@
+<style type="text/css">
+body {
+font-family="Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica,sans-serif;
+font-size=12px;
+}
+
+.search {
+margin:0 auto;
+width:500px;
+padding:14px;
+}
+
+label {
+width:10em;
+float: left;
+margin-right: 0.5em;
+display:block;
+}
+
+.submit {
+float:right;
+}
+
+fieldset {
+background:#EBF4FB none repeat scroll 0 0;
+border:2px solid #B7DDF2;
+width: 500px;
+} 
+
+p {
+border-bottom:1px solid #B7DDF2;
+color:#666666;
+font-size=11px;
+margin-bottom:20px;
+padding-bottom:10px;
+}
+
+.element {
+padding: 20px;
+}
+
+.results {
+margin:0 auto;
+width:700px;
+padding:14px;
+background:#EBF4FB none repeat scroll 0 0;
+}
+
+table.results {
+border:2px solid #B7DDF2;
+border-spacing: 0px;
+}
+
+p1 {
+color:#666666;
+font-size=11px;
+}
+
+td {
+border-top: solid 1px #B7DDF2;
+padding:14px;
+}
+
+</style>

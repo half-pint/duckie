@@ -1,14 +1,20 @@
 {% extends "search.html" %}
 {% block body %}
-<table border="2">
+<table class="results">
+  <tr>
+  <td><p1>Name</p1></td>
+  <td><p1>Born From</p1></td>
+  <td><p1>Born To</p1></td>
+  </tr>
   {% for entry in entries %}
     <tr>
-    <td><h2>{{ entry.name }}</h2></td>
-    <td><h2>{{ entry.bornFrom }}</h2></td>
-    <td><h2>{{ entry.bornTo }}</h2></td>
+    <td><p1>{{ entry.name }}</p1></td>
+    <td><p1>{{ entry.bornFrom }}</p1></td>
+    <td><p1>{{ entry.bornTo }}</p1></td>
     </tr>
   {% else %}
     <tr><li><em>No entries found</em></tr>
   {% endfor %}
+
 </table>
 {% endblock %}
