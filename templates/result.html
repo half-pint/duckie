@@ -1,9 +1,14 @@
 {% extends "search.html" %}
 {% block body %}
+<table border="2">
   {% for entry in entries %}
-    <li><h2>{{ entry }}</h2>
+    <tr>
+    <td><h2>{{ entry.name }}</h2></td>
+    <td><h2>{{ entry.bornFrom }}</h2></td>
+    <td><h2>{{ entry.bornTo }}</h2></td>
+    </tr>
   {% else %}
-    <li><em>No entries found</em>
+    <tr><li><em>No entries found</em></tr>
   {% endfor %}
-  </ul>
+</table>
 {% endblock %}

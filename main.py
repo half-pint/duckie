@@ -17,10 +17,14 @@ def my_form_post():
     query = """
     PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    SELECT ?name WHERE
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    SELECT ?name ?bornFrom ?bornTo WHERE
     {
     ?person rdf:type hebridean:Person .
-    ?person hebridean:title ?name
+    ?person hebridean:title ?name .
+    ?person hebridean:born ?born .
+    ?born hebridean:dateFrom ?bornFrom .
+    ?born hebridean:dateTo ?bornTo .
     """
     if request.form['text']:
         query = query + " FILTER regex(?name, '%s')" % text
@@ -30,9 +34,12 @@ def my_form_post():
     results = sparql.query().convert()
 
     entries =[]
+    bornFrom=[]
+    bornTo=[]
     for result in results["results"]["bindings"]:
-        entries.append(result["name"]["value"])
-   
+        entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"]})
+
+
     return render_template('result.html', entries=entries)
 
 if __name__ == '__main__':
