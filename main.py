@@ -2,7 +2,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from SPARQLWrapper import SPARQLWrapper, JSON
-
+from dateHandler import dateHandler
 app = Flask(__name__)
 
 @app.route('/')
@@ -12,7 +12,6 @@ def my_form():
 @app.route('/', methods=['POST'])
 def my_form_post():
 
-    text = request.form['text']
     sparql = SPARQLWrapper("http://localhost:3030/books/query")
     query = """
     PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
@@ -26,8 +25,12 @@ def my_form_post():
     ?born hebridean:dateFrom ?bornFrom .
     ?born hebridean:dateTo ?bornTo .
     """
-    if request.form['text']:
-        query = query + " FILTER regex(?name, '%s')" % text
+    if request.form['name']:
+        query = query + " FILTER regex(?name, '%s')" % request.form['name']
+    if request.form['date']:
+        datearr= request.form['date'].split("/")       
+        timestamps = dateHandler(datearr)
+        query = query + " FILTER ((xsd:dateTime(?bornFrom) > '%s'^^xsd:dateTime) && (xsd:dateTime(?bornTo)< '%s'^^xsd:dateTime)) " %(timestamps[0],timestamps[1])
     query = query + "}"
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
@@ -40,9 +43,7 @@ def my_form_post():
         entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"]})
 
 
-    return render_template('result.html', entries=entries)
+    return render_template('result.html', entries=entries, timestampTo=timestamps[1], timestampFrom=timestamps[0])
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
