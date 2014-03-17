@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<script type="text/JavaScript" src="{{ url_for('static', filename='frmvalidation.js') }}"></script> 
 <div>
-    <form action="." method="POST" class="search">
+    <form action="." method="POST" onsubmit="return validateForm()" class="search">
 
     <fieldset>
     <p>Search</p>
@@ -12,14 +13,14 @@
 
     <div class="element">
     <label>Date of Birth</label>
-    <input type="text" name="date">
+    <input type="text" name="date" id="dateofbirth" onchange="validateDate()" onclick="validateDate()" oninput="validateDate()">
+    <h id="dateofbirthMessage"></h>
     </div>
 
     <div class="element">
     <label>Date of Birth: Range</label>
     <input type="text" name="dateRange">
     </div>
-
 
     <div class="submit">
     <input type="submit" name="submit" value="Search">
