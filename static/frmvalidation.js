@@ -1,15 +1,40 @@
 function validateForm(){
-document.getElementById("validate").value = "inside validateFrom";
     if (!validateDate()){
-        document.getElementById("validate").innerHTML = "0";
         return false;
     }
     else {
-        document.getElementById("validate").innerHTML = "1";
         return true;
     }
 
 }
+function validateDateRange(){
+var from = document.getElementById("dateofbirthRangeFrom").value;
+var to = document.getElementById("dateofbirthRangeTo").value;
+if (!isItAYear("dateofbirthRangeFrom") & !isItAYear("dateofbirthRangeTo")){
+document.getElementById("dateofbirthMessageRange").innerHTML = "Please enter years in the format yyyy";
+return false;
+}
+else if (true)
+{document.getElementById("dateofbirthMessageRange").innerHTML = "The year 'from' should be before the year 'to' ";
+return false;
+}
+else {document.getElementById("dateofbirthMessageRange").innerHTML = "Yaaay";
+return true;
+
+}
+}
+
+function isItAYear(id){
+var year = document.getElementById(id).value;
+var currentTime = new Date()
+    if (!year.match(/^[0-9][0-9][0-9][0-9]$/)){
+        return false;}
+    else if (year>currentTime.getFullYear())
+		{return false;}
+    else {return true;}
+}
+
+
 
 function validateDate() {
 
@@ -44,13 +69,12 @@ function validateDate() {
 
 }
 
-
-function toggle(element){
+function tgl(element){
 if (element.value == 'y'){
 document.getElementById("dateofbirth").disabled = true;
 document.getElementById("dateofbirthRangeFrom").disabled = false;
 document.getElementById("dateofbirthRangeTo").disabled = false;
-validateForm()}
+}
 else{
 document.getElementById("dateofbirth").disabled = false;
 document.getElementById("dateofbirthRangeFrom").disabled = true;

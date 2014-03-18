@@ -14,8 +14,8 @@
 
 
     <div class="element">
-    <input type="radio" name="myradio" value="n" onClick="toggle(this)" checked><l>Search by Date</l>
-    <input type="radio" name="myradio" value="y" onClick="toggle(this)"><l>Search in Range</l>
+    <input type="radio" name="myradio" value="n" onClick="tgl(this)" checked><l>Search by Date</l>
+    <input type="radio" name="myradio" value="y" onClick="tgl(this)"><l>Search in Range</l>
     </div>
 
     <div class="element" id="dateofbirthDIV">
@@ -26,8 +26,8 @@
 
     <div class="element" id="dateofbirthRangeDIV">
     <label>Date of Birth Range</label>
-    <l>From</l><input type="text" name="date" id="dateofbirthRangeFrom" class="dateofbirthField" onchange="validateDateRange(this)" onclick="validateDateRange(this)" oninput="validateDateRange()" disabled="true">
-    <l>To</l><input type="text" name="date" id="dateofbirthRangeTo" class="dateofbirthField" onchange="validateDateRange(this)" onclick="validateDateRange(this)" oninput="validateDateRange()" disabled="true">
+    <l>From</l><input type="text" name="dateFrom" id="dateofbirthRangeFrom" class="dateofbirthField" oninput="validateDateRange()" onchange="validateDateRange()" onclick="validateDateRange()" disabled="true">
+    <l>To</l><input type="text" name="dateTo" id="dateofbirthRangeTo" class="dateofbirthField" oninput="validateDateRange()" onchange="validateDateRange()" onclick="validateDateRange()" disabled="true">
     <h id="dateofbirthMessageRange"></h>
     </div>
 
@@ -36,7 +36,6 @@
     </div>
     </fieldset>
     </form>
-<h id="validate"></h>
 
 
 
