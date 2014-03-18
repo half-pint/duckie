@@ -1,11 +1,11 @@
 function validateForm(){
-
+document.getElementById("validate").value = "inside validateFrom";
     if (!validateDate()){
-        document.getElementById("validate").value = "0";
+        document.getElementById("validate").innerHTML = "0";
         return false;
     }
     else {
-        document.getElementById("validate").value = "1";
+        document.getElementById("validate").innerHTML = "1";
         return true;
     }
 
@@ -43,3 +43,28 @@ function validateDate() {
 
 
 }
+
+
+function toggle(element){
+if (element.value == 'y'){
+document.getElementById("dateofbirth").disabled = true;
+document.getElementById("dateofbirthRangeFrom").disabled = false;
+document.getElementById("dateofbirthRangeTo").disabled = false;
+validateForm()}
+else{
+document.getElementById("dateofbirth").disabled = false;
+document.getElementById("dateofbirthRangeFrom").disabled = true;
+document.getElementById("dateofbirthRangeTo").disabled = true;
+}
+}
+
+
+
+
+function showStuff(id) {
+    document.getElementById(id).style.display = 'block';
+	}
+
+function hideStuff(id) {
+		document.getElementById(id).style.display = 'none';
+	}

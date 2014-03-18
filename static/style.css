@@ -1,6 +1,5 @@
 <style type="text/css">
 body {
-font-family="Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica,sans-serif;
 font-size=12px;
 }
 
@@ -10,12 +9,23 @@ width:500px;
 padding:14px;
 }
 
+l{
+width:10em;
+margin-right: 0.5em;
+color:#454545;
+font-family: Helvetica, sans-serif;
+}
+
 label {
 width:10em;
 float: left;
 margin-right: 0.5em;
 display:block;
+color:#454545;
+font-family: Helvetica, sans-serif;
 }
+
+.dateofbirthField {width:33px} 
 
 .submit {
 float:right;
@@ -30,6 +40,7 @@ width: 500px;
 p {
 border-bottom:1px solid #B7DDF2;
 color:#666666;
+font-family: Helvetica, sans-serif;
 font-size=11px;
 margin-bottom:20px;
 padding-bottom:10px;
