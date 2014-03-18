@@ -1,40 +1,15 @@
 function validateForm(){
+
     if (!validateDate()){
+        document.getElementById("validate").value = "0";
         return false;
     }
     else {
+        document.getElementById("validate").value = "1";
         return true;
     }
 
 }
-function validateDateRange(){
-var from = document.getElementById("dateofbirthRangeFrom").value;
-var to = document.getElementById("dateofbirthRangeTo").value;
-if (!isItAYear("dateofbirthRangeFrom") & !isItAYear("dateofbirthRangeTo")){
-document.getElementById("dateofbirthMessageRange").innerHTML = "Please enter years in the format yyyy";
-return false;
-}
-else if (true)
-{document.getElementById("dateofbirthMessageRange").innerHTML = "The year 'from' should be before the year 'to' ";
-return false;
-}
-else {document.getElementById("dateofbirthMessageRange").innerHTML = "Yaaay";
-return true;
-
-}
-}
-
-function isItAYear(id){
-var year = document.getElementById(id).value;
-var currentTime = new Date()
-    if (!year.match(/^[0-9][0-9][0-9][0-9]$/)){
-        return false;}
-    else if (year>currentTime.getFullYear())
-		{return false;}
-    else {return true;}
-}
-
-
 
 function validateDate() {
 
@@ -69,6 +44,32 @@ function validateDate() {
 
 }
 
+
+function validateDateRange(){
+if (!isItAYear("dateofbirthRangeFrom") & !isItAYear("dateofbirthRangeTo")){
+document.getElementById("dateofbirthMessageRange").innerHTML = "Please enter years in the format yyyy";
+return false;
+}
+else if (document.getElementById("dateofbirthRangeTo").value < document.getElementById("dateofbirthRangeFrom").value)
+{document.getElementById("dateofbirthMessageRange").innerHTML = "The year 'from' should be before the year 'to' ";
+return false;
+}
+else {document.getElementById("dateofbirthMessageRange").innerHTML = "Yaaay";
+return true;
+
+}
+}
+
+function isItAYear(id){
+var year = document.getElementById(id).value;
+var currentTime = new Date()
+    if (!year.match(/^[0-9][0-9][0-9][0-9]$/)){
+        return false;}
+    else if (year>currentTime.getFullYear())
+		{return false;}
+    else {return true;}
+}
+
 function tgl(element){
 if (element.value == 'y'){
 document.getElementById("dateofbirth").disabled = true;
@@ -81,14 +82,3 @@ document.getElementById("dateofbirthRangeFrom").disabled = true;
 document.getElementById("dateofbirthRangeTo").disabled = true;
 }
 }
-
-
-
-
-function showStuff(id) {
-    document.getElementById(id).style.display = 'block';
-	}
-
-function hideStuff(id) {
-		document.getElementById(id).style.display = 'none';
-	}

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-<script type="text/JavaScript" src="{{ url_for('static', filename='frmvalidation.js') }}"></script>
-
+<script type="text/JavaScript" src="{{ url_for('static', filename='frmvalidation.js') }}"></script> 
 <div>
-    <form action="." method="POST" onsubmit="return validateForm()" class="search">
+    <form action="." method="POST" onsubmit="return true" class="search">
 
     <fieldset>
     <p>Search</p>
@@ -11,14 +10,12 @@
     <label>Name</label>    
     <input type="text" name="name">
     </div>
-
-
     <div class="element">
-    <input type="radio" name="myradio" value="n" onClick="tgl(this)" checked><l>Search by Date</l>
-    <input type="radio" name="myradio" value="y" onClick="tgl(this)"><l>Search in Range</l>
+    <input type="radio" name="myradio" value="n" onClick="tgl(this)" style="visibility: visible;" checked><l>Search by Date</l>
+    <input type="radio" name="myradio" value="y" onClick="tgl(this)" style="visibility: visible;" ><l>Search in Range</l>
     </div>
 
-    <div class="element" id="dateofbirthDIV">
+    <div class="element">
     <label>Date of Birth</label>
     <input type="text" name="date" id="dateofbirth" onchange="validateDate()" onclick="validateDate()" oninput="validateDate()">
     <h id="dateofbirthMessage"></h>
@@ -36,11 +33,6 @@
     </div>
     </fieldset>
     </form>
-
-
-
 </div>
-
-
 {% block body %}{% endblock %}
 </html>
