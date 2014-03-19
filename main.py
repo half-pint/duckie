@@ -17,15 +17,18 @@ def my_form_post():
     PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    SELECT ?name ?bornFrom ?bornTo WHERE
+    SELECT ?name ?diedFrom ?diedTo ?bornFrom ?bornTo WHERE
     {
     ?person rdf:type hebridean:Person .
     ?person hebridean:title ?name .
+    ?person hebridean:dateOfDeath ?died .
     ?person hebridean:born ?born .
     ?born hebridean:dateFrom ?bornFrom .
-    ?born hebridean:dateTo ?bornTo .
+    ?born hebridean:dateFrom ?bornTo .
+    ?died hebridean:dateFrom ?diedFrom .
+    ?died hebridean:dateTo ?diedTo .
+
     """
-    a=0
     if request.form['name']:
        query = query + " FILTER regex(?name, '%s')" % request.form['name']
     if request.form['myradio']=='n':
@@ -34,7 +37,6 @@ def my_form_post():
             timestamps = dateHandler(datearr)
             query = query + " FILTER ((xsd:dateTime(?bornFrom) > '%s'^^xsd:dateTime) && (xsd:dateTime(?bornTo)< '%s'^^xsd:dateTime)) " %(timestamps[0],timestamps[1])
     if request.form['myradio']=='y':
-        a=5
         if (request.form['dateFrom'] and request.form['dateTo']):
             datearrF= request.form['dateFrom'].split("/")       
             timestampsF = dateHandler(datearrF)
@@ -47,13 +49,15 @@ def my_form_post():
     results = sparql.query().convert()
 
     entries =[]
-    bornFrom=[]
-    bornTo=[]
     for result in results["results"]["bindings"]:
-        entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"]})
+        if (False):
+            entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"]})
+        else:
+            entries.append({"name":result["name"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"]})
 
 
-    return render_template('result.html', entries=entries, a=a)
+
+    return render_template('result.html', entries=entries)
 
 
 if __name__ == '__main__':
