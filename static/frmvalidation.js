@@ -48,7 +48,10 @@ function validateDate(element, messageId) {
 }
 
 function validateDateRange(idF,idT,idMessage){
-if (!isItAYear(idF) | !isItAYear(idT)){
+if (document.getElementById(idF).value.length==0 & document.getElementById(idF).value.length==0)
+{document.getElementById(idMessage).innerHTML = "Yaaay";
+return true;}
+else if (!isItAYear(idF) | !isItAYear(idT)){
 document.getElementById(idMessage).innerHTML = "Please enter years in the format yyyy";
 return false;
 }
