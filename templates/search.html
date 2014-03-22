@@ -17,17 +17,34 @@
 
     <div class="element">
     <label>Date of Birth</label>
-    <input type="text" name="date" id="dateofbirth" onchange="validateDate()" onclick="validateDate()" oninput="validateDate()">
-    <h id="dateofbirthMessage"></h>
+    <input type="text" name="date" id="dateofbirth" onchange="validateDate(this,'dobMessage')" onclick="validateDate(this,'dobMessage')" oninput="validateDate(this,'dobMessage')">
+    <h id="dobMessage"></h>
     </div>
 
     <div class="element" id="dateofbirthRangeDIV">
     <label>Date of Birth Range</label>
-    <l>From</l><input type="text" name="dateFrom" id="dateofbirthRangeFrom" class="dateofbirthField" oninput="validateDateRange()" onchange="validateDateRange()" onclick="validateDateRange()" disabled="true">
-    <l>To</l><input type="text" name="dateTo" id="dateofbirthRangeTo" class="dateofbirthField" oninput="validateDateRange()" onchange="validateDateRange()" onclick="validateDateRange()" disabled="true">
-    <h id="dateofbirthMessageRange"></h>
+    <l>From</l><input type="text" name="dateFrom" id="dobRangeFrom" class="dateofbirthField" oninput="validateDateRange('dobRangeFrom','dobRangeTo','dobMessageRange')" onchange="validateDateRange('dobRangeFrom','dobRangeTo','dobMessageRange')" onclick="validateDateRange('dobRangeFrom','dobRangeTo','dobMessageRange')" disabled="true">
+    <l>To</l><input type="text" name="dateTo" id="dobRangeTo" class="dateofbirthField" oninput="validateDateRange('dobRangeFrom','dobRangeTo','dobMessageRange')" onchange="validateDateRange('dobRangeFrom','dobRangeTo','dobMessageRange')" onclick="validateDateRange('dobRangeFrom','dobRangeTo','dobMessageRange')" disabled="true">
+    <h id="dobMessageRange"></h>
     </div>
 
+    <div class="element">
+    <input type="radio" name="radioDeath" value="n" onClick="tglD(this)" style="visibility: visible;" checked><l>Search by Date</l>
+    <input type="radio" name="radioDeath" value="y" onClick="tglD(this)" style="visibility: visible;" ><l>Search in Range</l>
+    </div>
+
+    <div class="element">
+    <label>Date of Death</label>
+    <input type="text" name="date" id="dateofdeath" onchange="validateDate(this, 'dateofdeathMessage')" onclick="validateDate(this, 'dateofdeathMessage')" oninput="validateDate(this, 'dateofdeathMessage')">
+    <h id="dateofdeathMessage"></h>
+    </div>
+
+    <div class="element" id="dateofdeathRangeDIV">
+    <label>Date of Death Range</label>
+    <l>From</l><input type="text" name="dateFromDeath" id="dodRangeFrom" class="dateofbirthField" oninput="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onchange="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onclick="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" disabled="true">
+    <l>To</l><input type="text" name="dateToDeath" id="dodRangeTo" class="dateofbirthField" oninput="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onchange="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onclick="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" disabled="true">
+    <h id="dodMessageRange"></h>
+    </div>
     <div class="submit">
     <input type="submit" name="submit" value="Search">
     </div>
