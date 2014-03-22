@@ -35,14 +35,14 @@
 
     <div class="element">
     <label>Date of Death</label>
-    <input type="text" name="date" id="dateofdeath" onchange="validateDate(this, 'dateofdeathMessage')" onclick="validateDate(this, 'dateofdeathMessage')" oninput="validateDate(this, 'dateofdeathMessage')">
+    <input type="text" name="dateofdeath" id="dateofdeath" onchange="validateDate(this, 'dateofdeathMessage')" onclick="validateDate(this, 'dateofdeathMessage')" oninput="validateDate(this, 'dateofdeathMessage')">
     <h id="dateofdeathMessage"></h>
     </div>
 
     <div class="element" id="dateofdeathRangeDIV">
     <label>Date of Death Range</label>
-    <l>From</l><input type="text" name="dateFromDeath" id="dodRangeFrom" class="dateofbirthField" oninput="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onchange="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onclick="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" disabled="true">
-    <l>To</l><input type="text" name="dateToDeath" id="dodRangeTo" class="dateofbirthField" oninput="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onchange="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onclick="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" disabled="true">
+    <l>From</l><input type="text" name="dodRangeFrom" id="dodRangeFrom" class="dateofbirthField" oninput="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onchange="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onclick="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" disabled="true">
+    <l>To</l><input type="text" name="dodRangeTo" id="dodRangeTo" class="dateofbirthField" oninput="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onchange="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onclick="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" disabled="true">
     <h id="dodMessageRange"></h>
     </div>
     <div class="submit">

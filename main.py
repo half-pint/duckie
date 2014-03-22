@@ -24,7 +24,7 @@ def my_form_post():
     ?person hebridean:dateOfDeath ?died .
     ?person hebridean:born ?born .
     ?born hebridean:dateFrom ?bornFrom .
-    ?born hebridean:dateFrom ?bornTo .
+    ?born hebridean:dateTo ?bornTo .
     ?died hebridean:dateFrom ?diedFrom .
     ?died hebridean:dateTo ?diedTo .
 
@@ -43,6 +43,18 @@ def my_form_post():
             datearrT= request.form['dateTo'].split("/")       
             timestampsT = dateHandler(datearrT)
             query = query + " FILTER ((xsd:dateTime(?bornFrom) > '%s'^^xsd:dateTime) && (xsd:dateTime(?bornTo)< '%s'^^xsd:dateTime)) " %(timestampsF[0],timestampsT[1])
+    if request.form['radioDeath']=='n':
+        if request.form['dateofdeath']:
+            datearr= request.form['dateofdeath'].split("/")       
+            timestamps = dateHandler(datearr)
+            query = query + " FILTER ((xsd:dateTime(?diedFrom) > '%s'^^xsd:dateTime) && (xsd:dateTime(?diedTo)< '%s'^^xsd:dateTime)) " %(timestamps[0],timestamps[1])
+    if request.form['radioDeath']=='y':
+        if (request.form['dodRangeFrom'] and request.form['dodRangeTo']):
+            datearrF= request.form['dodRangeFrom'].split("/")       
+            timestampsF = dateHandler(datearrF)
+            datearrT= request.form['dodRangeTo'].split("/")       
+            timestampsT = dateHandler(datearrT)
+            query = query + " FILTER ((xsd:dateTime(?diedFrom) > '%s'^^xsd:dateTime) && (xsd:dateTime(?diedTo)< '%s'^^xsd:dateTime)) " %(timestampsF[0],timestampsT[1])
     query = query + "}"
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
@@ -53,7 +65,7 @@ def my_form_post():
         if (False):
             entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"]})
         else:
-            entries.append({"name":result["name"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"]})
+            entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"]})
 
 
 
