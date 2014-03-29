@@ -45,6 +45,18 @@
     <l>To</l><input type="text" name="dodRangeTo" id="dodRangeTo" class="dateofbirthField" oninput="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onchange="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" onclick="validateDateRange('dodRangeFrom','dodRangeTo','dodMessageRange')" disabled="true">
     <h id="dodMessageRange"></h>
     </div>
+    
+   <div class="element">
+   <label>Lived at</label>
+    <select name="livedAt">
+    <option value=''>&nbsp;</option>
+  {% for location in locations %}
+    <option>{{ location.name }}</option>
+  {% endfor %}
+    </select>
+    </div>
+
+
     <div class="submit">
     <input type="submit" name="submit" value="Search">
     </div>

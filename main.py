@@ -4,11 +4,36 @@ from flask import render_template
 from SPARQLWrapper import SPARQLWrapper, JSON
 from dateHandler import dateHandler
 
+
 app = Flask(__name__)
 
 @app.route('/')
 def my_form():
-    return render_template("search.html")
+    sparql = SPARQLWrapper("http://localhost:3030/books/query")
+    query = """
+    PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    SELECT ?name WHERE
+    {
+    ?location rdf:type hebridean:Location .
+    ?location hebridean:title ?name .
+
+    
+    } ORDER BY ?name
+
+    """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+
+    locations =[]
+    for result in results["results"]["bindings"]:
+        locations.append({"name":result["name"]["value"] })
+
+
+
+    return render_template('search.html', locations=locations)
 
 @app.route('/', methods=['POST'])
 def my_form_post():
@@ -17,7 +42,7 @@ def my_form_post():
     PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    SELECT ?name ?diedFrom ?diedTo ?bornFrom ?bornTo WHERE
+    SELECT ?name ?diedFrom ?diedTo ?bornFrom ?bornTo ?address ?livedAt WHERE
     {
     ?person rdf:type hebridean:Person .
     ?person hebridean:title ?name .
@@ -27,6 +52,10 @@ def my_form_post():
     ?born hebridean:dateTo ?bornTo .
     ?died hebridean:dateFrom ?diedFrom .
     ?died hebridean:dateTo ?diedTo .
+    ?person hebridean:livedAt ?addressL .
+    ?addressL hebridean:title ?address .
+    ?addressL hebridean:locatedAt ?location .
+    ?location hebridean:title ?livedAt .
 
     """
     if request.form['name']:
@@ -55,6 +84,7 @@ def my_form_post():
             datearrT= request.form['dodRangeTo'].split("/")       
             timestampsT = dateHandler(datearrT)
             query = query + " FILTER ((xsd:dateTime(?diedFrom) > '%s'^^xsd:dateTime) && (xsd:dateTime(?diedTo)< '%s'^^xsd:dateTime)) " %(timestampsF[0],timestampsT[1])
+
     query = query + "}"
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
@@ -62,10 +92,7 @@ def my_form_post():
 
     entries =[]
     for result in results["results"]["bindings"]:
-        if (False):
-            entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"]})
-        else:
-            entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"]})
+        entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"]})
 
 
 
