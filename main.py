@@ -9,7 +9,31 @@ app = Flask(__name__)
 
 @app.route('/')
 def my_form():
-    return render_template("search.html")
+    sparql = SPARQLWrapper("http://localhost:3030/books/query")
+
+    query = """
+
+    PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    SELECT DISTINCT ?name WHERE
+    {
+    ?person rdf:type hebridean:Person .
+    ?person hebridean:livedAt ?addressL .
+    ?addressL hebridean:title ?address .
+    ?addressL hebridean:locatedAt ?location .
+    ?location hebridean:title ?name .
+    } ORDER BY ?name
+    """
+
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    results = sparql.query().convert()
+    locations =[]
+    for result in results["results"]["bindings"]:
+        locations.append({"name":result["name"]["value"] })
+
+    return render_template('search.html', locations=locations)
 
 @app.route('/', methods=['POST'])
 def my_form_post():
