@@ -9,31 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def my_form():
-    sparql = SPARQLWrapper("http://localhost:3030/books/query")
-    query = """
-    PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    SELECT ?name WHERE
-    {
-    ?location rdf:type hebridean:Location .
-    ?location hebridean:title ?name .
-
-    
-    } ORDER BY ?name
-
-    """
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-
-    locations =[]
-    for result in results["results"]["bindings"]:
-        locations.append({"name":result["name"]["value"] })
-
-
-
-    return render_template('search.html', locations=locations)
+    return render_template("search.html")
 
 @app.route('/', methods=['POST'])
 def my_form_post():
@@ -84,6 +60,8 @@ def my_form_post():
             datearrT= request.form['dodRangeTo'].split("/")       
             timestampsT = dateHandler(datearrT)
             query = query + " FILTER ((xsd:dateTime(?diedFrom) > '%s'^^xsd:dateTime) && (xsd:dateTime(?diedTo)< '%s'^^xsd:dateTime)) " %(timestampsF[0],timestampsT[1])
+    if request.form['livedAt']!='':
+        query = query + " FILTER regex(?livedAt, '%s')" % request.form['livedAt']
 
     query = query + "}"
     sparql.setQuery(query)
