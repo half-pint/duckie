@@ -3,6 +3,7 @@ from flask import request
 from flask import render_template
 from SPARQLWrapper import SPARQLWrapper, JSON
 from dateHandler import dateHandler
+from summaryGenerator import generateSummaries
 
 
 app = Flask(__name__)
@@ -42,10 +43,11 @@ def my_form_post():
     PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    SELECT ?name ?diedFrom ?diedTo ?bornFrom ?bornTo ?address ?livedAt WHERE
+    SELECT DISTINCT ?id ?name ?diedFrom ?diedTo ?bornFrom ?bornTo ?address ?livedAt ?bl WHERE
     {
     ?person rdf:type hebridean:Person .
     ?person hebridean:title ?name .
+	?person hebridean:subjectID ?id .
     ?person hebridean:dateOfDeath ?died .
     ?person hebridean:born ?born .
     ?born hebridean:dateFrom ?bornFrom .
@@ -56,6 +58,7 @@ def my_form_post():
     ?addressL hebridean:title ?address .
     ?addressL hebridean:locatedAt ?location .
     ?location hebridean:title ?livedAt .
+    ?person hebridean:sex ?bl .
 
     """
     if request.form['name']:
@@ -94,11 +97,11 @@ def my_form_post():
 
     entries =[]
     for result in results["results"]["bindings"]:
-        entries.append({"name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"]})
+        entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"]  })
 
 
-
-    return render_template('result.html', entries=entries)
+    summaries=generateSummaries(entries)
+    return render_template('result.html', entries=entries, summaries=summaries)
 
 
 if __name__ == '__main__':

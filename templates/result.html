@@ -3,21 +3,13 @@
 
 <table class="results">
   <tr>
-  <td><p1>Name</p1></td>
-  <td><p1>Born From</p1></td>
-  <td><p1>Born To</p1></td>
-  <td><p1>Died From</p1></td>
-  <td><p1>Died To</p1></td>
-  <td><p1>Lived At</p1></td>
+  <td><p1>Results</p1></td>
+
   </tr>
-  {% for entry in entries %}
+  {% for summary in summaries %}
     <tr>
-    <td><p1>{{ entry.name }}</p1></td>
-    <td><p1>{{ entry.bornFrom }}</p1></td>
-    <td><p1>{{ entry.bornTo }}</p1></td>
-    <td><p1>{{ entry.diedFrom }}</p1></td>
-    <td><p1>{{ entry.diedTo }}</p1></td>
-    <td><p1>{{ entry.livedAt }}</p1></td>
+    <td><p1>{{ summary }}</p1></td>
+
     </tr>
   {% else %}
     <tr><li><em>No entries found</em></tr>
