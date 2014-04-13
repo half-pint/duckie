@@ -30,18 +30,31 @@ def month(number):
 
 def lived(ID, entries):
 	locations = []
-	addr = []
+	used = []
 	for entry in entries:
 		if ID == entry["id"]:
-			locations.append({'city':entry["livedAt"], 'address':entry["address"]})
+			if entry["addressID"] not in used:
+				locations.append(entry["address"])
+				used.append(entry["addressID"])
 	return locations
+
+def siblings(ID, entries):
+	siblings = []
+	used = []
+	for entry in entries:
+		if ID == entry["id"]:
+			if entry["siblingID"] not in used:
+				siblings.append(entry["sibling"])
+				used.append(entry["siblingID"])
+	return siblings
+
 
 def generateSummaries(entries):
 	summaries =[]
 	ID = 0
 	for entry in entries:
 		if ID != entry["id"]:
-			summary=" "
+			summary=str(entry["id"])+" "
 			summary += entry["name"]
 			dateF = entry["bornFrom"].split('T')
 			dateT = entry["bornTo"].split('T')
@@ -58,23 +71,52 @@ def generateSummaries(entries):
 				summary = summary +" was born between "+dateF[0]+" and "+dateT[0]
 			summary = summary + " and lived at "
 			locations = lived(entry["id"], entries)
+
+			#Check if the last location in the list in order decide between ',' or '.'			
 			dot = len(locations)
 			control = 1 
 			for location in locations:
-				summary+=  location['address']+" (located at " + location["city"]+") "
+				summary+=  location
 				if control == dot:
 					summary += ". "
+				if control+1 == dot:
+					summary += " and "
 				else: 
 					summary += ", "
 				control+=1
+
+
+			#Check the sex of the person in order to use the proper pronoun 
 			if entry["sex"] == "Female":
-				summary = summary + " Female"
+				personalPronoun = "She"
+				possessivePronoun = "Her"
 			elif entry["sex"] == "Male":
-				summary += "male"
+				personalPronoun = "He"
+				possessivePronoun = "His"
 			else: 
-				summary += "n/a"
+				personalPronoun = "They"
+				possessivePronoun = "Their"
 			ID = entry["id"]
+			#Mention siblings and other relatives
+			if  entry["sibling"] == "None":
+				summary += personalPronoun + " had no siblings."
+			else:
+				summary += personalPronoun + " was a sibling of "
+				siblingsList = siblings(ID, entries)
+				dot = len(siblingsList)
+				control = 1 
+				for sibling in siblingsList:
+					summary+=  sibling
+					if control == dot:
+						summary += ". "
+					if control+1 == dot:
+						summary += " and "
+					else: 
+						summary += ", "
+					control+=1
+				 
 			summaries.append(summary)
+				
 
 	return summaries
     
