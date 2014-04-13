@@ -48,6 +48,16 @@ def siblings(ID, entries):
 				used.append(entry["siblingID"])
 	return siblings
 
+def married(ID, entries):
+	married = []
+	used = []
+	for entry in entries:
+		if ID == entry["id"]:
+			if entry["marriedID"] not in used:
+				married.append(entry["married"])
+				used.append(entry["marriedID"])
+	return married
+
 
 def generateSummaries(entries):
 	summaries =[]
@@ -98,8 +108,9 @@ def generateSummaries(entries):
 				possessivePronoun = "Their"
 			ID = entry["id"]
 			#Mention siblings and other relatives
+			#Siblings
 			if  entry["sibling"] == "None":
-				summary += personalPronoun + " had no siblings."
+				summary += personalPronoun + " had no siblings. "
 			else:
 				summary += personalPronoun + " was a sibling of "
 				siblingsList = siblings(ID, entries)
@@ -114,6 +125,25 @@ def generateSummaries(entries):
 					else: 
 						summary += ", "
 					control+=1
+			#Married
+			if  entry["married"] == "N/a":
+				summary += "There is no information in the database if "+personalPronoun.lower()+" was married. "
+			else:
+				summary += personalPronoun + " was married to "
+				marriedList = married(ID, entries)
+				dot = len(marriedList)
+				control = 1 
+				for spouse in marriedList:
+					summary+=  spouse
+					if control == dot:
+						summary += ". "
+					if control+1 == dot:
+						summary += " and "
+					else: 
+						summary += ", "
+					control+=1
+
+
 				 
 			summaries.append(summary)
 				

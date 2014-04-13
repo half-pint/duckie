@@ -43,7 +43,7 @@ def my_form_post():
 	PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
 	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-	SELECT DISTINCT ?id ?name ?diedFrom ?diedTo ?bornFrom ?bornTo ?address ?addressID ?livedAt ?bl ?sibling ?siblingID WHERE
+	SELECT DISTINCT ?id ?name ?diedFrom ?diedTo ?bornFrom ?bornTo ?address ?addressID ?livedAt ?bl ?sibling ?siblingID ?marriedID ?married WHERE
 	{
 	?person rdf:type hebridean:Person .
 	?person hebridean:title ?name .
@@ -63,6 +63,9 @@ def my_form_post():
 	OPTIONAL { ?person  hebridean:siblingOf  ?siblingL .
 				?siblingL hebridean:title ?sibling .
 				?siblingL hebridean:subjectID ?siblingID }
+	OPTIONAL { ?person  hebridean:married  ?marriedL .
+				?marriedL hebridean:title ?married .
+				?marriedL hebridean:subjectID ?marriedID }
 
 	"""
 	if request.form['name']:
@@ -102,10 +105,15 @@ def my_form_post():
 	entries =[]
 	for result in results["results"]["bindings"]:
 		if "sibling" in result:
-			entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"], "addressID":result["addressID"]["value"], "siblingID":result["siblingID"]["value"], "sibling":result["sibling"]["value"]})
+			if "married" in result:
+				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"], "addressID":result["addressID"]["value"], "siblingID":result["siblingID"]["value"], "sibling":result["sibling"]["value"], "marriedID":result["marriedID"]["value"], "married":result["married"]["value"]})
+			else:
+				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"], "addressID":result["addressID"]["value"], "siblingID":result["siblingID"]["value"], "sibling":result["sibling"]["value"], "marriedID":"N/a", "married":"N/a"})
 		else:
-			entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"],"addressID":result["addressID"]["value"], "sibling":"None"})
-
+			if "married" in result:
+				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"],"addressID":result["addressID"]["value"], "sibling":"None", "marriedID":result["marriedID"]["value"], "married":result["married"]["value"]})
+			else:
+				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"],"addressID":result["addressID"]["value"], "sibling":"None", "marriedID":"N/a", "married":"N/a"})
 
 	summaries=generateSummaries(entries)
 	return render_template('result.html', entries=entries, summaries=summaries)
