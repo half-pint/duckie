@@ -8,7 +8,13 @@
   </tr>
   {% for summary in summaries %}
     <tr>
-    <td><p1>{{ summary }}</p1></td>
+    <td>
+
+    <h1>{{ summary.name }}</h1>
+
+    <p1>{{ summary.summary }}</p1>
+
+</td>
 
     </tr>
   {% else %}
@@ -16,4 +22,4 @@
   {% endfor %}
 
 </table>
-{% endblock %}
+{% endblock %}	

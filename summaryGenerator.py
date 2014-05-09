@@ -58,13 +58,40 @@ def married(ID, entries):
 				used.append(entry["marriedID"])
 	return married
 
+def children(ID, entries):
+	children = []
+	used = []
+	for entry in entries:
+		if ID == entry["id"]:
+			if entry["childID"] not in used:
+				children.append(entry["child"])
+				used.append(entry["childID"])
+	return children
+
+def parents(ID, entries):
+	parents = []
+	used = []
+	for entry in entries:
+		if ID == entry["id"]:
+			if entry["parentID"] not in used:
+				parents.append(entry["parent"])
+				used.append(entry["parentID"])
+	return parents
+
+def occupation(ID, entries):
+	occupations = []
+	for entry in entries:
+		if ID == entry["id"]:
+			if entry["occupation"] not in occupations:
+				occupations.append(entry["occupation"])
+	return occupations
 
 def generateSummaries(entries):
 	summaries =[]
 	ID = 0
 	for entry in entries:
 		if ID != entry["id"]:
-			summary=str(entry["id"])+" "
+			summary=" "
 			summary += entry["name"]
 			dateF = entry["bornFrom"].split('T')
 			dateT = entry["bornTo"].split('T')
@@ -84,14 +111,14 @@ def generateSummaries(entries):
 
 			#Check if the last location in the list in order decide between ',' or '.'			
 			dot = len(locations)
-			control = 1 
+			control = 1
 			for location in locations:
 				summary+=  location
 				if control == dot:
 					summary += ". "
-				if control+1 == dot:
+				elif control+1 == dot:
 					summary += " and "
-				else: 
+				else:
 					summary += ", "
 				control+=1
 
@@ -103,26 +130,46 @@ def generateSummaries(entries):
 			elif entry["sex"] == "Male":
 				personalPronoun = "He"
 				possessivePronoun = "His"
-			else: 
+			else:
 				personalPronoun = "They"
 				possessivePronoun = "Their"
 			ID = entry["id"]
+
+			#Died
+			if  entry["diedFrom"] == "N/a":
+				summary += "There is no information in the database about "+possessivePronoun.lower()+" date of death. "
+			else:
+				summary += personalPronoun + " died "
+				parentsList = parents(ID, entries)
+				dateF = entry["diedFrom"].split('T')
+				dateT = entry["diedTo"].split('T')
+				dateSplitF = dateF[0].split('-')
+				dateSplitT = dateT[0].split('-')
+				if dateF[0] == dateT[0]:
+					summary = summary + "on "+ dateSplitF[2] +" "+ month(int(dateSplitF[1])) +" " +dateSplitF[0]+". "
+				elif dateSplitF[0] == dateSplitT[0]:
+					if dateSplitF[1] == dateSplitT[1]:
+						summary = summary +"in " + month(int(dateSplitF[1])) +" " +dateSplitF[0]+". "
+					else:
+						summary = summary +"in " +dateSplitF[0]+". "
+				else:
+					summary = summary +" between "+dateF[0]+" and "+dateT[0] +". "
 			#Mention siblings and other relatives
 			#Siblings
-			if  entry["sibling"] == "None":
-				summary += personalPronoun + " had no siblings. "
+			if  entry["sibling"] == "N/a":
+				summary += "There is no information about siblings. "
 			else:
 				summary += personalPronoun + " was a sibling of "
 				siblingsList = siblings(ID, entries)
 				dot = len(siblingsList)
-				control = 1 
+				control = 1
 				for sibling in siblingsList:
 					summary+=  sibling
 					if control == dot:
 						summary += ". "
-					if control+1 == dot:
+					elif control+1 == dot:
 						summary += " and "
-					else: 
+					else:
 						summary += ", "
 					control+=1
 			#Married
@@ -132,20 +179,70 @@ def generateSummaries(entries):
 				summary += personalPronoun + " was married to "
 				marriedList = married(ID, entries)
 				dot = len(marriedList)
-				control = 1 
+				control = 1
 				for spouse in marriedList:
 					summary+=  spouse
 					if control == dot:
 						summary += ". "
-					if control+1 == dot:
+					elif control+1 == dot:
 						summary += " and "
-					else: 
+					else:
+						summary += ", "
+					control+=1
+			#Children
+			if  entry["child"] == "N/a":
+				summary += "There is no information in the database if "+personalPronoun.lower()+" had any children. "
+			else:
+				summary += personalPronoun + " was a parent of "
+				childrenList = children(ID, entries)
+				dot = len(childrenList)
+				control = 1
+				for child in childrenList:
+					summary+=  child
+					if control == dot:
+						summary += ". "
+					elif control+1 == dot:
+						summary += " and "
+					else:
+						summary += ", "
+					control+=1
+			#Parents
+			if  entry["parent"] == "N/a":
+				summary += "There is no information in the database about "+possessivePronoun.lower()+" parents. "
+			else:
+				summary += personalPronoun + " was a child of "
+				parentsList = parents(ID, entries)
+				dot = len(parentsList)
+				control = 1
+				for parent in parentsList:
+					summary+=  parent
+					if control == dot:
+						summary += ". "
+					elif control+1 == dot:
+						summary += " and "
+					else:
+						summary += ", "
+					control+=1
+			#Occupation
+			if  entry["occupation"] == "N/a":
+				summary += "There is no information in the database about "+possessivePronoun.lower()+" occupation. "
+			else:
+				summary += personalPronoun + " worked as a "
+				occupationList = occupation(ID, entries)
+				dot = len(occupationList)
+				control = 1
+				for job in occupationList:
+					summary+=  job
+					if control == dot:
+						summary += ". "
+					elif control+1 == dot:
+						summary += " and "
+					else:
 						summary += ", "
 					control+=1
 
-
 				 
-			summaries.append(summary)
+			summaries.append({"summary":summary, "name":entry["name"]})
 				
 
 	return summaries

@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def my_form():
-	sparql = SPARQLWrapper("http://localhost:3030/books/query")
+	sparql = SPARQLWrapper("http://localhost:3030/hebridean/query")
 
 	query = """
 
@@ -38,38 +38,47 @@ def my_form():
 
 @app.route('/', methods=['POST'])
 def my_form_post():
-	sparql = SPARQLWrapper("http://localhost:3030/books/query")
+	sparql = SPARQLWrapper("http://localhost:3030/hebridean/query")
 	query = """
 	PREFIX hebridean: <http://www.hebrideanconnections.com/hebridean.owl#>
 	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 	PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-	SELECT DISTINCT ?id ?name ?diedFrom ?diedTo ?bornFrom ?bornTo ?address ?addressID ?livedAt ?bl ?sibling ?siblingID ?marriedID ?married WHERE
+	SELECT DISTINCT ?id ?name ?diedFrom ?diedTo ?bornFrom ?bornTo ?address ?addressID ?livedAt ?bl ?sibling ?siblingID ?marriedID ?married ?child ?childID ?parent ?parentID ?occupation WHERE
 	{
 	?person rdf:type hebridean:Person .
 	?person hebridean:title ?name .
 	?person hebridean:subjectID ?id .
-	?person hebridean:dateOfDeath ?died .
 	?person hebridean:born ?born .
 	?born hebridean:dateFrom ?bornFrom .
 	?born hebridean:dateTo ?bornTo .
-	?died hebridean:dateFrom ?diedFrom .
-	?died hebridean:dateTo ?diedTo .
 	?person hebridean:livedAt ?addressL .
 	?addressL hebridean:title ?address .
 	?addressL hebridean:subjectID ?addressID .
 	?addressL hebridean:locatedAt ?location .
 	?location hebridean:title ?livedAt .
 	?person hebridean:sex ?bl .
+	OPTIONAL { 	?person hebridean:dateOfDeath ?died .
+				?died hebridean:dateFrom ?diedFrom .
+				?died hebridean:dateTo ?diedTo .}
 	OPTIONAL { ?person  hebridean:siblingOf  ?siblingL .
 				?siblingL hebridean:title ?sibling .
-				?siblingL hebridean:subjectID ?siblingID }
+				?siblingL hebridean:subjectID ?siblingID .}
 	OPTIONAL { ?person  hebridean:married  ?marriedL .
 				?marriedL hebridean:title ?married .
-				?marriedL hebridean:subjectID ?marriedID }
+				?marriedL hebridean:subjectID ?marriedID . }
+	OPTIONAL { ?person  hebridean:parentOf  ?childL .
+				?childL hebridean:title ?child .
+				?childL hebridean:subjectID ?childID  .}
+	OPTIONAL { ?parentL  hebridean:parentOf  ?person .
+				?parentL hebridean:title ?parent .
+				?parentL hebridean:subjectID ?parentID  . }
+	OPTIONAL { ?person  hebridean:occupation  ?occupation .}
+
+
 
 	"""
 	if request.form['name']:
-	   query = query + " FILTER regex(?name, '%s')" % request.form['name']
+	   query = query + " FILTER regex(lcase(str(?name)), '%s')" % request.form['name'].lower()
 	if request.form['myradio']=='n':
 		if request.form['date']:
 			datearr= request.form['date'].split("/")	   
@@ -105,15 +114,47 @@ def my_form_post():
 	entries =[]
 	for result in results["results"]["bindings"]:
 		if "sibling" in result:
-			if "married" in result:
-				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"], "addressID":result["addressID"]["value"], "siblingID":result["siblingID"]["value"], "sibling":result["sibling"]["value"], "marriedID":result["marriedID"]["value"], "married":result["married"]["value"]})
-			else:
-				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"], "addressID":result["addressID"]["value"], "siblingID":result["siblingID"]["value"], "sibling":result["sibling"]["value"], "marriedID":"N/a", "married":"N/a"})
+			sibling = result["sibling"]["value"]
+			siblingID = result["siblingID"]["value"]
 		else:
-			if "married" in result:
-				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"],"addressID":result["addressID"]["value"], "sibling":"None", "marriedID":result["marriedID"]["value"], "married":result["married"]["value"]})
-			else:
-				entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":result["diedFrom"]["value"], "diedTo":result["diedTo"]["value"], "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"],"addressID":result["addressID"]["value"], "sibling":"None", "marriedID":"N/a", "married":"N/a"})
+			sibling = "N/a"
+			siblingID = "N/a"
+
+		if "married" in result:
+			married = result["married"]["value"]
+			marriedID = result["marriedID"]["value"]
+		else:
+			married = "N/a"
+			marriedID = "N/a"
+
+		if "child" in result:
+			child = result["child"]["value"]
+			childID = result["childID"]["value"]
+		else:
+			child = "N/a"
+			childID = "N/a"
+
+		if "parent" in result:
+			parent = result["parent"]["value"]
+			parentID = result["parentID"]["value"]
+		else:
+			parent = "N/a"
+			parentID = "N/a"
+
+		if "occupation" in result:
+			occupation = result["occupation"]["value"]
+		else:
+			occupation = "N/a"
+
+		if "diedFrom" in result:
+			diedFrom = result["diedFrom"]["value"]
+			diedTo = result["diedTo"]["value"]
+
+		else:
+			diedFrom = "N/a"
+			diedTo = "N/a"
+
+		entries.append({"id":result["id"]["value"], "name":result["name"]["value"], "bornFrom":result["bornFrom"]["value"], "bornTo":result["bornTo"]["value"], "diedFrom":diedFrom, "diedTo":diedTo, "livedAt":result["livedAt"]["value"], "sex":result["bl"]["value"], "address":result["address"]["value"], "addressID":result["addressID"]["value"], "siblingID": siblingID, "sibling":sibling, "marriedID":marriedID, "married":married, "child":child, "childID":childID, "parent":parent, "parentID":parentID, "occupation":occupation})
 
 	summaries=generateSummaries(entries)
 	return render_template('result.html', entries=entries, summaries=summaries)
